@@ -24,12 +24,14 @@ function formatMoney(n) {
 function escapeHtml(s) {
   return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
-// Assumes the standard layout: /index.html (bidder page) + /admin/index.html (this page).
+// Assumes the standard layout: <base>/index.html (bidder page) + <base>/admin/index.html
+// (this page), both served from the same origin — where <base> can be the site root OR a
+// subpath (e.g. GitHub Pages project sites like /your-repo/). Derived from this page's own
+// pathname rather than hardcoding "/", so it works no matter where the site is hosted, and
+// works on hosts with clean URLs (no ".html" in the address bar) too.
 function shareLink(auctionId) {
-  const base = new URL("../", location.href);
-  base.search = "";
-  base.hash = "";
-  return `${base.href}?a=${auctionId}`;
+  const basePath = location.pathname.replace(/admin\/?(index\.html)?$/, "");
+  return `${location.origin}${basePath}index.html?a=${auctionId}`;
 }
 
 // ------------------------------------------------------------------- login
