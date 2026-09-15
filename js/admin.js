@@ -26,8 +26,10 @@ function escapeHtml(s) {
 }
 // Assumes the standard layout: /index.html (bidder page) + /admin/index.html (this page).
 function shareLink(auctionId) {
-  const base = location.href.replace(/admin\/index\.html.*$/, "index.html");
-  return `${base}?a=${auctionId}`;
+  const base = new URL("../", location.href);
+  base.search = "";
+  base.hash = "";
+  return `${base.href}?a=${auctionId}`;
 }
 
 // ------------------------------------------------------------------- login
